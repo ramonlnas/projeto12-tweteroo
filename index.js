@@ -2,8 +2,8 @@ import express from "express";
 import cors from "cors";
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
 
 const users = []
@@ -11,15 +11,14 @@ const tweets = []
 let saveAvatar;
 
 
-tweets["avatar"] = saveAvatar;
 
-console.log(tweets)
-console.log(saveAvatar)
 
 
 app.post("/sign-up", (req, res) => {
   const { username, avatar } = req.body;
 
+  
+  saveAvatar = avatar
 
   if (!username || !avatar ) {
     return res.status(400).send({message: "Insira todos os campos!"})
@@ -28,9 +27,10 @@ app.post("/sign-up", (req, res) => {
   const newUser = {
     username,
     avatar,
-  }
-  saveAvatar = avatar;
+  } 
+
   users.push(newUser)
+
 
   res.status(201).send("Ok")
 });
@@ -47,13 +47,15 @@ app.post("/tweets", (req, res) => {
         tweet
     }
 
-    tweets.push(newTweet)
+    tweets.push({...newTweet, avatar:saveAvatar})
+    console.log(tweets)
 
     res.status(201).send("Ok")
 })
 
 app.get("/tweets", (req, res) => {
-    res.send(tweets)
+    const limitedArray = tweets.slice(0,10)
+    res.send(limitedArray)
 })
 
 app.listen(5000, () => {
