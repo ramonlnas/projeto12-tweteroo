@@ -5,58 +5,55 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
-const users = []
-const tweets = []
+const users = [];
+const tweets = [];
 let saveAvatar;
-
-
-
-
 
 app.post("/sign-up", (req, res) => {
   const { username, avatar } = req.body;
+  console.log(req.body);
 
-  
-  saveAvatar = avatar
+  saveAvatar = avatar;
 
-  if (!username || !avatar ) {
-    return res.status(400).send({message: "Insira todos os campos!"})
+  if (!username || !avatar) {
+    return res.status(400).send({ message: "Insira todos os campos!" });
   }
 
   const newUser = {
     username,
     avatar,
-  } 
+  };
 
-  users.push(newUser)
+  users.push(newUser);
 
-
-  res.status(201).send("Ok")
+  res.status(201).send("Ok");
 });
 
 app.post("/tweets", (req, res) => {
-    const { username, tweet } = req.body
+  const { username, tweet } = req.body;
 
-    if( !username || !tweet ) {
-        return res.status(400).send({message: "Verifique se preencheu todos os campos!"})
-    }
+  if (!username || !tweet) {
+    return res
+      .status(400)
+      .send({ message: "Verifique se preencheu todos os campos!" });
+  }
 
-    const newTweet = {
-        username,
-        tweet
-    }
+  const newTweet = {
+    username,
+    tweet,
+  };
 
-    tweets.push({...newTweet, avatar:saveAvatar})
-    console.log(tweets)
+  tweets.push({ ...newTweet, avatar: saveAvatar });
+  console.log(tweets);
 
-    res.status(201).send("Ok")
-})
+  res.status(201).send("Ok");
+});
 
 app.get("/tweets", (req, res) => {
-    const limitedArray = tweets.slice(0,10)
-    res.send(limitedArray)
-})
+  const limitedArray = tweets.slice(0, 10);
+  const reverseArray = limitedArray.reverse()
+  res.send(reverseArray);
+});
 
 app.listen(5000, () => {
   console.log("Running on http://localhost:5000");
